@@ -358,9 +358,15 @@ export default function Dashboard() {
                     </div>
                     
                     <div>
-                      <span className="text-xs font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                      <a
+                        href={`https://app.respage.com/public/reservations/${reservation.reservationId}/manage`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-mono text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-2 py-1 rounded transition-colors duration-200 cursor-pointer"
+                        title="Manage reservation on ResPage"
+                      >
                         {reservation.reservationId.slice(-8)}
-                      </span>
+                      </a>
                     </div>
                     
                     <div>
