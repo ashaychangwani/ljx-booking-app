@@ -10,6 +10,8 @@ import {
   PauseIcon,
   PlayIcon,
   TrashIcon,
+  TicketIcon,
+  BuildingOfficeIcon,
 } from '@heroicons/react/24/outline';
 
 export default function Dashboard() {
@@ -137,6 +139,18 @@ export default function Dashboard() {
   const completedJobs = bookingJobs.filter(job => job.status === BookingStatus.COMPLETED);
   const totalSuccessfulBookings = bookingJobs.reduce((sum, job) => sum + job.successfulBookings, 0);
 
+  // Get all reservations from all booking jobs
+  const allReservations = bookingJobs
+    .flatMap(job => 
+      job.bookedSlots.map(slot => ({
+        ...slot,
+        amenityName: job.amenityName,
+        jobId: job.id,
+        jobStatus: job.status
+      }))
+    )
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -193,12 +207,12 @@ export default function Dashboard() {
           <div className="p-5">
             <div className="flex items-center">
               <div className="flex-shrink-0">
-                <CalendarIcon className="h-6 w-6 text-gray-400" />
+                <TicketIcon className="h-6 w-6 text-gray-400" />
               </div>
               <div className="ml-5 w-0 flex-1">
                 <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Total Bookings</dt>
-                  <dd className="text-lg font-medium text-gray-900">{totalSuccessfulBookings}</dd>
+                  <dt className="text-sm font-medium text-gray-500 truncate">Total Reservations</dt>
+                  <dd className="text-lg font-medium text-gray-900">{allReservations.length}</dd>
                 </dl>
               </div>
             </div>
@@ -284,6 +298,96 @@ export default function Dashboard() {
               </li>
             ))}
           </ul>
+        )}
+      </div>
+
+      {/* Reservations */}
+      <div className="bg-white shadow overflow-hidden sm:rounded-md">
+        <div className="px-4 py-5 sm:px-6">
+          <h3 className="text-lg leading-6 font-medium text-gray-900">Your Reservations</h3>
+          <p className="mt-1 max-w-2xl text-sm text-gray-500">
+            All your confirmed bookings and their details.
+          </p>
+        </div>
+        
+        {allReservations.length === 0 ? (
+          <div className="px-4 py-12 text-center">
+            <TicketIcon className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No reservations yet</h3>
+            <p className="mt-1 text-sm text-gray-500">
+              Your confirmed bookings will appear here once they're made.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-hidden">
+            <div className="px-4 py-3 bg-gray-50 border-b border-gray-200">
+              <div className="grid grid-cols-6 gap-4 text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <div>Amenity</div>
+                <div>Date</div>
+                <div>Time</div>
+                <div>Reservation ID</div>
+                <div>Access Code</div>
+                <div>Booked</div>
+              </div>
+            </div>
+            <ul role="list" className="divide-y divide-gray-200">
+              {allReservations.slice(0, 10).map((reservation) => (
+                <li key={reservation.id} className="px-4 py-4 hover:bg-gray-50 transition-colors duration-200">
+                  <div className="grid grid-cols-6 gap-4 items-center">
+                    <div className="flex items-center">
+                      <BuildingOfficeIcon className="h-5 w-5 text-gray-400 mr-2" />
+                      <div>
+                        <p className="text-sm font-medium text-gray-900">{reservation.amenityName}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <CalendarIcon className="h-4 w-4 text-gray-400 mr-2" />
+                      <span className="text-sm text-gray-900">
+                        {new Date(reservation.bookedDate).toLocaleDateString('en-US', {
+                          weekday: 'short',
+                          month: 'short', 
+                          day: 'numeric'
+                        })}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <ClockIcon className="h-4 w-4 text-gray-400 mr-2" />
+                      <span className="text-sm text-gray-900">{reservation.bookedTime}</span>
+                    </div>
+                    
+                    <div>
+                      <span className="text-xs font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                        {reservation.reservationId.slice(-8)}
+                      </span>
+                    </div>
+                    
+                    <div>
+                      <span className="text-sm font-mono text-green-700 bg-green-100 px-2 py-1 rounded">
+                        {reservation.accessCode}
+                      </span>
+                    </div>
+                    
+                    <div className="text-xs text-gray-500">
+                      {new Date(reservation.createdAt).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric'
+                      })}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            
+            {allReservations.length > 10 && (
+              <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
+                <p className="text-sm text-gray-500 text-center">
+                  Showing latest 10 reservations out of {allReservations.length} total
+                </p>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>

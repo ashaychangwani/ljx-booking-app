@@ -103,7 +103,15 @@ router.get('/user/:email', async (req, res) => {
             errorMessage: job.errorMessage,
             isActive: job.isActive,
             createdAt: job.createdAt,
-            updatedAt: job.updatedAt
+            updatedAt: job.updatedAt,
+            bookedSlots: job.bookedSlots.map(slot => ({
+                id: slot.id,
+                reservationId: slot.reservationId,
+                accessCode: slot.accessCode,
+                bookedDate: slot.bookedDate,
+                bookedTime: slot.bookedTime,
+                createdAt: slot.createdAt
+            }))
         }));
         res.json({
             success: true,

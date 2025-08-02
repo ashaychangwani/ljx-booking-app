@@ -7,7 +7,7 @@ exports.logger = void 0;
 const winston_1 = __importDefault(require("winston"));
 const logFormat = winston_1.default.format.combine(winston_1.default.format.timestamp(), winston_1.default.format.errors({ stack: true }), winston_1.default.format.json(), winston_1.default.format.colorize({ all: true }));
 exports.logger = winston_1.default.createLogger({
-    level: process.env.LOG_LEVEL || 'info',
+    level: process.env.LOG_LEVEL || 'debug',
     format: logFormat,
     defaultMeta: { service: 'ljx-booking-backend' },
     transports: [
