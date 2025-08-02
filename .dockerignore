@@ -1,0 +1,54 @@
+# Node modules
+node_modules
+*/node_modules
+**/node_modules
+
+# Build output
+dist
+*/dist
+**/dist
+
+# Logs
+logs
+*.log
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode
+.idea
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Docker
+Dockerfile*
+docker-compose*
+
+# Testing
+coverage
+
+# Temporary files
+*.tmp
+*.temp
+
+# Keep the current database
+!backend/database.sqlite
+!data/database.sqlite
